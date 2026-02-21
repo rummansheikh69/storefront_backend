@@ -23,6 +23,6 @@ const reviewSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Product",
   },
-});
+},{timestamps:true});
 
 export const Review = mongoose.model("Review", reviewSchema);

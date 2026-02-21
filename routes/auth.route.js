@@ -11,4 +11,5 @@ router.post("/logout", AUTHCONTROLLER.logout);
 // router.post("/forgot-password", AUTHCONTROLLER.forgotPassword);
 router.post("/reset-password/:token", AUTHCONTROLLER.resetPassword);
 router.post("/change-password", protectedRoutes, AUTHCONTROLLER.changePassword);
+router.post("/change-email", protectedRoutes, AUTHCONTROLLER.changeEmail);
 export default router;

@@ -7,9 +7,9 @@ import jwt from "jsonwebtoken";
 
 const register = asyncHandler(async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!(username && email && password)) {
+    if (!(name && email && password)) {
       return res.status(401).json({ error: "All fields are required" });
     }
 
@@ -29,7 +29,7 @@ const register = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      username,
+      name,
       email,
       password: hashedPassword,
     });
@@ -43,6 +43,8 @@ const register = asyncHandler(async (req, res) => {
       res.status(400).json({ error: "Invalid user data" });
     }
   } catch (error) {
+    console.log("Erro in register", error);
+    
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -123,7 +125,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 const changePassword = asyncHandler(async (req, res) => {
   try {
-    const { oldPass, newPass, confirmNewPass } = req.body;
+    const { oldPass, newPass  } = req.body;
     const userId = req.user?._id;
 
     let user = await User.findById(userId);
@@ -131,7 +133,7 @@ const changePassword = asyncHandler(async (req, res) => {
       return res.status(400).json({ error: "User not found" });
     }
 
-    if (!oldPass || !newPass || !confirmNewPass) {
+    if (!oldPass || !newPass ) {
       return res.status(400).json({ error: "Both are required" });
     }
 
@@ -140,11 +142,6 @@ const changePassword = asyncHandler(async (req, res) => {
       if (oldPass.trim() === newPass.trim()) {
         return res.status(401).json({
           error: "You entered old password. Please try a new password",
-        });
-      }
-      if (newPass.trim() !== confirmNewPass.trim()) {
-        return res.status(401).json({
-          error: "New password didn't match. Please try again",
         });
       }
 
@@ -166,6 +163,34 @@ const changePassword = asyncHandler(async (req, res) => {
       res.status(200).json(user);
     }
   } catch (error) {
+    console.log("error in change pass", error);
+    
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+const changeEmail = asyncHandler(async (req, res) => {
+  try {
+    const { email } = req.body;
+    const userId = req.user?._id;
+
+    let user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    if (!email) {
+      return res.status(400).json({ error: "Email are required" });
+    }
+
+    // Change email
+    user.email = email || user.email;
+    user = await user.save();
+    res.status(200).json(user);
+   
+  } catch (error) {
+    console.log("error in change pass", error);
+    
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -178,4 +203,4 @@ const getMe = asyncHandler(async (req, res) => {
   }
 });
 
-export { register, login, logout, getMe, resetPassword, changePassword };
+export { register, login, logout, getMe, resetPassword, changePassword,changeEmail };
