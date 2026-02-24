@@ -7,9 +7,9 @@ import jwt from "jsonwebtoken";
 
 const register = asyncHandler(async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!(username && email && password)) {
+    if (!(name && email && password)) {
       return res.status(401).json({ error: "All fields are required" });
     }
 
@@ -29,7 +29,7 @@ const register = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      username,
+      name,
       email,
       password: hashedPassword,
     });
@@ -43,6 +43,7 @@ const register = asyncHandler(async (req, res) => {
       res.status(400).json({ error: "Invalid user data" });
     }
   } catch (error) {
+    console.log("Error in register", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
