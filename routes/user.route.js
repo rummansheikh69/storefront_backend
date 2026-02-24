@@ -4,6 +4,6 @@ import { protectedRoutes } from "../middleware/protectedRoutes.js";
 
 const router = express.Router();
 
-router.post("/reviews/:id", protectedRoutes, submitReview);
+router.post("/review/:id", protectedRoutes, submitReview);
 
 export default router;

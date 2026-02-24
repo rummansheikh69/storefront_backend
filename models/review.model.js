@@ -25,7 +25,15 @@ const reviewSchema = new Schema(
       ref: "Product",
     },
   },
+<<<<<<< HEAD
   { timestamps: true },
 );
+=======
+  product: {
+    type: Schema.Types.ObjectId,
+    ref: "Product",
+  },
+},{timestamps:true});
+>>>>>>> bbd6c2010b00182f7a742e64d42b3f26e0163aa6
 
 export const Review = mongoose.model("Review", reviewSchema);
